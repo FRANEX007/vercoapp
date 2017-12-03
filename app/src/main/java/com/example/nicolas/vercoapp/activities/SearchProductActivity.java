@@ -50,7 +50,6 @@ public class SearchProductActivity extends AppCompatActivity implements SearchVi
     LinearLayout filtersLinearLayout;
     RecyclerView productRecyclerView;
     TextView emptyView;
-    boolean queryFound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +135,8 @@ public class SearchProductActivity extends AppCompatActivity implements SearchVi
             selectedTypeTextView.setText("MOSTRAR TODOS");
             emptyView.setVisibility(View.INVISIBLE);
             productRecyclerView.setVisibility(View.VISIBLE);
-        } else{
+
+        } else {
             productRecyclerView.setVisibility(View.INVISIBLE);
             filtersLinearLayout.setVisibility(View.INVISIBLE);
             emptyView.setVisibility(View.VISIBLE);
@@ -177,8 +177,6 @@ public class SearchProductActivity extends AppCompatActivity implements SearchVi
                 if (e == null) {
                     if (objects.size() > 0) {
 
-                        queryFound = true;
-
                         for (final ParseObject product : objects) {
                             final String trademark = product.getString("trademark");
                             final String model = product.getString("model");
@@ -216,10 +214,8 @@ public class SearchProductActivity extends AppCompatActivity implements SearchVi
                         }
 
                     } else {
-                        Toast.makeText(SearchProductActivity.this, "Error" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Crashlytics.logException(e);
-                        queryFound = false;
-
+//                        Toast.makeText(SearchProductActivity.this, "Error" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Crashlytics.logException(e);
 
                     }
                 } else {

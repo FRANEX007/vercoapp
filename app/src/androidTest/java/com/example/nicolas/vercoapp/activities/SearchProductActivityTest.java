@@ -1,6 +1,7 @@
 package com.example.nicolas.vercoapp.activities;
 
-
+//pruebas automatizadas de interfaz de usuario
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -19,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -31,6 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
@@ -42,6 +45,9 @@ public class SearchProductActivityTest {
 
     @Test
     public void searchProductActivityTest() {
+
+        //ingresar busqueda.
+
         ViewInteraction appCompatImageView = onView(
                 allOf(withClassName(is("android.support.v7.widget.AppCompatImageView")), withContentDescription("Buscar"),
                         childAtPosition(
@@ -52,6 +58,7 @@ public class SearchProductActivityTest {
                                 1),
                         isDisplayed()));
         appCompatImageView.perform(click());
+
 
         ViewInteraction searchAutoComplete = onView(
                 allOf(withClassName(is("android.widget.SearchView$SearchAutoComplete")),
@@ -75,6 +82,10 @@ public class SearchProductActivityTest {
                         isDisplayed()));
         searchAutoComplete2.perform(pressImeActionButton());
 
+        //afirmaciones)->assertions
+
+        //vistas de layout filtros
+
         ViewInteraction linearLayout = onView(
                 allOf(withId(R.id.filtersLinearLayout),
                         childAtPosition(
@@ -96,8 +107,19 @@ public class SearchProductActivityTest {
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
+        ViewInteraction button2 = onView(
+                allOf(withId(R.id.filterButton),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        button2.check(matches(withText("FILTRAR")));
+
         ViewInteraction textView = onView(
-                allOf(withId(R.id.selectedTypeTextView), withText("MOSTRAR TODOS"),
+                allOf(withId(R.id.selectedTypeTextView),
                         childAtPosition(
                                 allOf(withId(R.id.filtersLinearLayout),
                                         childAtPosition(
@@ -105,7 +127,129 @@ public class SearchProductActivityTest {
                                                 1)),
                                 1),
                         isDisplayed()));
-        textView.check(matches(withText("MOSTRAR TODOS")));
+        textView.check(matches(isDisplayed()));
+
+        ViewInteraction textView2 = onView(
+                allOf(withId(R.id.selectedTypeTextView),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        textView2.check(matches(withText("MOSTRAR TODOS")));
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.productsRecyclerView),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                2),
+                        isDisplayed()));
+        recyclerView.check(matches(isDisplayed()));
+
+        //cambio de textView al presionar en filtro.
+
+        //presiono boton de filtro
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.filterButton),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        appCompatButton.perform(click());
+
+        //interaccion con adapterview
+        DataInteraction appCompatCheckedTextView = onData(anything())
+                .inAdapterView(allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")),
+                        childAtPosition(
+                                withClassName(is("android.widget.FrameLayout")),
+                                0)))
+                .atPosition(0);
+        appCompatCheckedTextView.perform(click());
+
+        //assert
+        ViewInteraction textView3 = onView(
+                allOf(withId(R.id.selectedTypeTextView),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        textView3.check(matches(withText("HOMBRE")));
+
+        //vuelvo a presionar el boton
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.filterButton),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
+
+        //interaccion con adapterview
+        DataInteraction appCompatCheckedTextView2 = onData(anything())
+                .inAdapterView(allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")),
+                        childAtPosition(
+                                withClassName(is("android.widget.FrameLayout")),
+                                0)))
+                .atPosition(1);
+        appCompatCheckedTextView2.perform(click());
+
+        //assert
+        ViewInteraction textView4 = onView(
+                allOf(withId(R.id.selectedTypeTextView),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        textView4.check(matches(withText("MUJER")));
+
+        //vuelvo a presionar boton
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.filterButton),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
+
+        //interaccion con adapterview
+        DataInteraction appCompatCheckedTextView3 = onData(anything())
+                .inAdapterView(allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")),
+                        childAtPosition(
+                                withClassName(is("android.widget.FrameLayout")),
+                                0)))
+                .atPosition(2);
+        appCompatCheckedTextView3.perform(click());
+
+        //assert
+        ViewInteraction textView5 = onView(
+                allOf(withId(R.id.selectedTypeTextView),
+                        childAtPosition(
+                                allOf(withId(R.id.filtersLinearLayout),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        textView5.check(matches(withText("MOSTRAR TODO")));
 
     }
 
