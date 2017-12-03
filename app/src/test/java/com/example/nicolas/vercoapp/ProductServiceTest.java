@@ -29,4 +29,8 @@ public class ProductServiceTest {
     public void getNameFilterType_isCorrect(){
         assertNotNull(productService.getNameFilterType(2));
     }
+    @Test
+    public void getListSearchProduct_size(){
+        assertTrue("Registros obtenidos", 0 <= productService.getListSearchProduct("zapatillas","mostrar todos").size());
+    }
 }
